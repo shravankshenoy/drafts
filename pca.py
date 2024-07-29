@@ -35,6 +35,23 @@ for column in pca_df.columns:
     unit_vector = vector / np.linalg.norm(vector)
     vectors[column] = unit_vector
 
-# Display the results
-for column, unit_vector in vectors.items():
-    print(f"Unit vector for {column}: {unit_vector}")
+# Compute magnitudes for each row in pca_df
+magnitudes = []
+
+for idx, row in pca_df.iterrows():
+    # Multiply each element by the unit vector
+    vector1 = row['PC1'] * vectors['PC1']
+    vector2 = row['PC2'] * vectors['PC2']
+    
+    # Add the vectors
+    combined_vector = vector1 + vector2
+    
+    # Compute the magnitude
+    magnitude = np.linalg.norm(combined_vector)
+    
+    # Store the magnitude
+    magnitudes.append(magnitude)
+
+# Display the magnitudes
+for idx, magnitude in enumerate(magnitudes):
+    print(f"Magnitude of vector for row {idx}: {magnitude}")
