@@ -18,15 +18,23 @@ scaler = StandardScaler()
 scaled_data = scaler.fit_transform(df)
 
 # Initialize PCA and fit it to the data
-pca = PCA(n_components=2)  # Let's reduce it to 2 dimensions
+pca = PCA(n_components=2)  # Reduce it to 2 dimensions
 principal_components = pca.fit_transform(scaled_data)
 
 # Create a DataFrame with the principal components
 pca_df = pd.DataFrame(data=principal_components, columns=['PC1', 'PC2'])
 
-print("Principal Components:")
-print(pca_df)
+# Compute the 0th, 25th, 50th, 75th, and 100th percentiles for each column
+percentiles = [0, 25, 50, 75, 100]
+vectors = {}
 
-# Explained variance ratio
-print("\nExplained Variance Ratio:")
-print(pca.explained_variance_ratio_)
+for column in pca_df.columns:
+    # Calculate percentiles
+    vector = np.percentile(pca_df[column], percentiles)
+    # Normalize to get the unit vector
+    unit_vector = vector / np.linalg.norm(vector)
+    vectors[column] = unit_vector
+
+# Display the results
+for column, unit_vector in vectors.items():
+    print(f"Unit vector for {column}: {unit_vector}")
